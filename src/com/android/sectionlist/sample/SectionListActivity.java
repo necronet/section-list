@@ -36,12 +36,9 @@ public class SectionListActivity extends Activity {
             new SectionListItem("Test 24 - C", "C"), //
             new SectionListItem("Test 25 - C", "C"), //
             new SectionListItem("Test 26 - C", "C"), //
-    };
-
-    
+    };    
 
     private SectionListAdapter sectionAdapter;
-
     private SectionListView listView;
 
     @Override

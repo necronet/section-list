@@ -29,7 +29,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
     private int viewTypeCount;
     protected final LayoutInflater inflater;
 
-    public View transparentView;
+    public View headerView;
 
     private OnItemClickListener linkedListener;
 
@@ -38,7 +38,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         this.items = items;
         this.inflater = inflater;
         
-        this.transparentView=inflater.inflate(R.layout.section_view, null);
+        this.headerView=inflater.inflate(R.layout.section_view, null);
         updateSessionCache();
     }
 
@@ -200,7 +200,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
             if (entry.getKey() > firstVisibleItem ) {
                 break;
             }
-            setSectionText(entry.getValue(), transparentView);
+            setSectionText(entry.getValue(), headerView);
         }
     }
 

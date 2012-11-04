@@ -3,6 +3,7 @@ package com.android.sectionlist.sample;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
@@ -15,7 +16,7 @@ import android.widget.ListView;
  */
 public class SectionListView extends ListView implements OnScrollListener {
 
-    private View transparentView;
+    private View headerView;
 
     public SectionListView(final Context context, final AttributeSet attrs,
             final int defStyle) {
@@ -49,19 +50,19 @@ public class SectionListView extends ListView implements OnScrollListener {
         }
         super.setAdapter(adapter);
         final ViewParent parent = getParent();
-        if (!(parent instanceof FrameLayout)) {
-            throw new IllegalStateException(
-                    "Section List should have FrameLayout as parent!");
-        }
-        if (transparentView != null) {
-            ((FrameLayout) parent).removeView(transparentView);
-        }
-        transparentView = ((SectionListAdapter) adapter).transparentView;
+//        if (!(parent instanceof FrameLayout)) {
+//            throw new IllegalStateException(
+//                    "Section List should have FrameLayout as parent!");
+//        }
+        if (headerView != null) 
+            ((ViewGroup) parent).removeView(headerView);
+        
+        headerView = ((SectionListAdapter) adapter).headerView;
         final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        ((FrameLayout) parent).addView(transparentView, lp);
+        ((FrameLayout) parent).addView(headerView, lp);
         if (adapter.isEmpty()) {
-            transparentView.setVisibility(View.INVISIBLE);
+            headerView.setVisibility(View.INVISIBLE);
         }
     }
 
