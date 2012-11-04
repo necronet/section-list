@@ -1,51 +1,13 @@
 package com.android.sectionlist.sample;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 /**
  * Example activity.
  */
 public class SectionListActivity extends Activity {
 
-    private class StandardArrayAdapter extends ArrayAdapter<SectionListItem> {
-
-        private final SectionListItem[] items;
-
-        public StandardArrayAdapter(final Context context,
-                final int textViewResourceId, final SectionListItem[] items) {
-            super(context, textViewResourceId, items);
-            this.items = items;
-        }
-
-        @Override
-        public View getView(final int position, final View convertView,
-                final ViewGroup parent) {
-            View view = convertView;
-            if (view == null) {
-                final LayoutInflater vi = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                view = vi.inflate(R.layout.example_list_view, null);
-            }
-            final SectionListItem currentItem = items[position];
-            if (currentItem != null) {
-                final TextView textView = (TextView) view
-                        .findViewById(R.id.example_text_view);
-                if (textView != null) {
-                    textView.setText(currentItem.item.toString());
-                }
-            }
-            return view;
-        }
-    }
 
     SectionListItem[] exampleArray = { // Comment to prevent re-format
     new SectionListItem("Test 1 - A", "A"), //
@@ -76,7 +38,7 @@ public class SectionListActivity extends Activity {
             new SectionListItem("Test 26 - C", "C"), //
     };
 
-    private StandardArrayAdapter arrayAdapter;
+    
 
     private SectionListAdapter sectionAdapter;
 
@@ -86,42 +48,12 @@ public class SectionListActivity extends Activity {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
-        arrayAdapter = new StandardArrayAdapter(this, R.id.example_text_view,
-                exampleArray);
-        sectionAdapter = new SectionListAdapter(getLayoutInflater(),
-                arrayAdapter);
+        
+        sectionAdapter = new SectionListAdapter(getLayoutInflater(),exampleArray);
         listView = (SectionListView) findViewById(getResources().getIdentifier(
                 "section_list_view", "id",
                 this.getClass().getPackage().getName()));
         listView.setAdapter(sectionAdapter);
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.test_menu, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-        case R.id.standard_list:
-            arrayAdapter = new StandardArrayAdapter(this,
-                    R.id.example_text_view, exampleArray);
-            sectionAdapter = new SectionListAdapter(getLayoutInflater(),
-                    arrayAdapter);
-            listView.setAdapter(sectionAdapter);
-            return true;
-        case R.id.empty_list:
-            arrayAdapter = new StandardArrayAdapter(this,
-                    R.id.example_text_view, new SectionListItem[] {});
-            sectionAdapter = new SectionListAdapter(getLayoutInflater(),
-                    arrayAdapter);
-            listView.setAdapter(sectionAdapter);
-            return true;
-        default:
-            return super.onOptionsItemSelected(item);
-        }
-    }
 }

@@ -5,6 +5,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +22,7 @@ import android.widget.TextView;
 public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         OnItemClickListener {
     
-    private final ListAdapter linkedAdapter;
+    private final SectionListItem[] items;
     private final Map<Integer, String> sectionPositions = new LinkedHashMap<Integer, String>();
     private final Map<Integer, Integer> itemPositions = new LinkedHashMap<Integer, Integer>();
     private final Map<View, String> currentViewSections = new HashMap<View, String>();
@@ -32,8 +34,8 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
     private OnItemClickListener linkedListener;
 
     public SectionListAdapter(final LayoutInflater inflater,
-            final ListAdapter linkedAdapter) {
-        this.linkedAdapter = linkedAdapter;
+            final SectionListItem[] items) {
+        this.items = items;
         this.inflater = inflater;
         
         this.transparentView=inflater.inflate(R.layout.section_view, null);
@@ -44,13 +46,12 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         int currentPosition = 0;
         sectionPositions.clear();
         itemPositions.clear();
-        viewTypeCount = linkedAdapter.getViewTypeCount() + 1;
+        viewTypeCount = 2;
         String currentSection = null;
-        final int count = linkedAdapter.getCount();
+        final int count = items.length;
 
         for (int i = 0; i < count; i++) {
-            final SectionListItem item = (SectionListItem) linkedAdapter
-                    .getItem(i);
+            final SectionListItem item =items[i];
 
             boolean sameSection = currentSection == null ? item.section == null
                     : currentSection.equals(item.section);
@@ -76,7 +77,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
             return sectionPositions.get(position);
         }
         final int linkedItemPosition = getLinkedPosition(position);
-        return linkedAdapter.getItem(linkedItemPosition);
+        return items[linkedItemPosition];
 
     }
 
@@ -98,7 +99,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
             return sectionPositions.get(position).hashCode();
         }
 
-        return linkedAdapter.getItemId(getLinkedPosition(position));
+        return items[getLinkedPosition(position)].hashCode();
 
     }
 
@@ -110,8 +111,10 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
     public int getItemViewType(final int position) {
         if (isSection(position)) {
             return viewTypeCount - 1;
-        }
-        return linkedAdapter.getItemViewType(getLinkedPosition(position));
+        }else
+            return viewTypeCount -2;
+        
+        
     }
 
     private View getSectionView(final View convertView, final String section) {
@@ -144,9 +147,27 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         if (isSection(position)) {
             return getSectionView(convertView, sectionPositions.get(position));
         }
-        return linkedAdapter.getView(getLinkedPosition(position), convertView,
+        return getItemView(getLinkedPosition(position), convertView,
                 parent);
     }
+    
+
+    public View getItemView( int position,  View convertView,ViewGroup parent) {
+        View view = convertView;
+        if (view == null) {
+            view = inflater.inflate(R.layout.example_list_view, null);
+        }
+        final SectionListItem currentItem = items[position];
+        if (currentItem != null) {
+            final TextView textView = (TextView) view
+                    .findViewById(R.id.example_text_view);
+            if (textView != null) {
+                textView.setText(currentItem.item.toString());
+            }
+        }
+        return view;
+    }
+
 
     @Override
     public int getViewTypeCount() {
@@ -155,25 +176,22 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
 
     @Override
     public boolean hasStableIds() {
-        return linkedAdapter.hasStableIds();
+        return true;
     }
 
     @Override
     public boolean isEmpty() {
-        return linkedAdapter.isEmpty();
+        return items.length==0;
     }
 
     @Override
     public boolean areAllItemsEnabled() {
-        return linkedAdapter.areAllItemsEnabled();
+        return true;
     }
 
     @Override
     public boolean isEnabled(final int position) {
-        if (isSection(position)) {
-            return true;
-        }
-        return linkedAdapter.isEnabled(getLinkedPosition(position));
+        return true;
     }
 
     public void makeSectionInvisibleIfFirstInList(final int firstVisibleItem) {
