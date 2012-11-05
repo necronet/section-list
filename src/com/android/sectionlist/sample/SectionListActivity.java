@@ -42,11 +42,11 @@ public class SectionListActivity extends Activity {
     private SectionListView listView;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        sectionAdapter = new SectionListAdapter(getLayoutInflater(),exampleArray);
+        sectionAdapter = new SectionListAdapter(this,exampleArray);
         listView = (SectionListView) findViewById(getResources().getIdentifier(
                 "section_list_view", "id",
                 this.getClass().getPackage().getName()));

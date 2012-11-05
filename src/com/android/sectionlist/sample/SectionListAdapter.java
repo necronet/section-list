@@ -2,8 +2,8 @@ package com.android.sectionlist.sample;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
+import android.content.Context;
 import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.LayoutInflater;
@@ -32,16 +32,22 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
 
     private OnItemClickListener linkedListener;
     
-    public SectionListAdapter(final LayoutInflater inflater,
+    public SectionListAdapter(Context context,
             final SectionListItem[] items) {
+        this(context,items,R.layout.section_view);
+    }
+    
+
+    public SectionListAdapter(Context context,
+            final SectionListItem[] items,int headerLayout) {
         this.items = items;
-        this.inflater = inflater;
-        
-        this.headerView=inflater.inflate(R.layout.section_view, null);
+        this.inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        this.headerView=inflater.inflate(headerLayout, null);
         updateSessionCache();
     }
 
-    private synchronized void updateSessionCache() {
+
+    private  void updateSessionCache() {
         int currentPosition = 0;
         sectionPositions.clear();
         itemPositions.clear();
