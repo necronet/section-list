@@ -18,8 +18,7 @@ import android.widget.TextView;
 /**
  * Adapter for sections.
  */
-public class SectionListAdapter extends BaseAdapter implements ListAdapter,
-        OnItemClickListener {
+public class SectionListAdapter extends BaseAdapter implements ListAdapter{
     
     private final SectionListItem[] items;
     private final SparseArray<String> sectionPositions = new SparseArray<String>();
@@ -30,14 +29,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
 
     public View headerView;
 
-    private OnItemClickListener linkedListener;
     
-    public SectionListAdapter(Context context,
-            final SectionListItem[] items) {
-        this(context,items,R.layout.section_view);
-    }
-    
-
     public SectionListAdapter(Context context,
             final SectionListItem[] items,int headerLayout) {
         this.items = items;
@@ -45,7 +37,6 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         this.headerView=inflater.inflate(headerLayout, null);
         updateSessionCache();
     }
-
 
     private  void updateSessionCache() {
         int currentPosition = 0;
@@ -209,21 +200,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         }
     }
 
-    
     protected void sectionClicked(final String section) {}
 
-    @Override
-    public void onItemClick(final AdapterView< ? > parent, final View view,
-            final int position, final long id) {
-        if (isSection(position)) {
-            sectionClicked(getSectionName(position));
-        } else if (linkedListener != null) {
-            linkedListener.onItemClick(parent, view,
-                    getLinkedPosition(position), id);
-        }
-    }
-
-    public void setOnItemClickListener(final OnItemClickListener linkedListener) {
-        this.linkedListener = linkedListener;
-    }
+    
 }

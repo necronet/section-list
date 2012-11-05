@@ -46,7 +46,7 @@ public class SectionListActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
         
-        sectionAdapter = new SectionListAdapter(this,exampleArray);
+        sectionAdapter = new SectionListAdapter(this,exampleArray,R.layout.section_view);
         listView = (SectionListView) findViewById(getResources().getIdentifier(
                 "section_list_view", "id",
                 this.getClass().getPackage().getName()));
