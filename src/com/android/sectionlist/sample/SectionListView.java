@@ -8,6 +8,7 @@ import android.view.ViewParent;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -50,17 +51,19 @@ public class SectionListView extends ListView implements OnScrollListener {
         }
         super.setAdapter(adapter);
         final ViewParent parent = getParent();
-//        if (!(parent instanceof FrameLayout)) {
-//            throw new IllegalStateException(
-//                    "Section List should have FrameLayout as parent!");
-//        }
+        
         if (headerView != null) 
             ((ViewGroup) parent).removeView(headerView);
         
         headerView = ((SectionListAdapter) adapter).headerView;
         final FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
                 LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        ((FrameLayout) parent).addView(headerView, lp);
+        
+        if(parent instanceof LinearLayout)
+            ((LinearLayout)parent).addView(headerView, 0);
+        else
+            ((ViewGroup) parent).addView(headerView, lp);
+        
         if (adapter.isEmpty()) {
             headerView.setVisibility(View.INVISIBLE);
         }
