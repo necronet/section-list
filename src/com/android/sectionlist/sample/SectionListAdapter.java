@@ -1,12 +1,11 @@
 package com.android.sectionlist.sample;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import android.content.Context;
-import android.util.Log;
+import android.util.SparseArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,8 +22,8 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
         OnItemClickListener {
     
     private final SectionListItem[] items;
-    private final Map<Integer, String> sectionPositions = new LinkedHashMap<Integer, String>();
-    private final Map<Integer, Integer> itemPositions = new LinkedHashMap<Integer, Integer>();
+    private final SparseArray<String> sectionPositions = new SparseArray<String>();
+    private final SparseIntArray itemPositions = new SparseIntArray();
     private final Map<View, String> currentViewSections = new HashMap<View, String>();
     private int viewTypeCount;
     protected final LayoutInflater inflater;
@@ -32,7 +31,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
     public View headerView;
 
     private OnItemClickListener linkedListener;
-
+    
     public SectionListAdapter(final LayoutInflater inflater,
             final SectionListItem[] items) {
         this.items = items;
@@ -82,7 +81,7 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
     }
 
     public synchronized boolean isSection(final int position) {
-        return sectionPositions.containsKey(position);
+        return sectionPositions.get(position)!=null;
     }
 
     public synchronized String getSectionName(final int position) {
@@ -196,17 +195,16 @@ public class SectionListAdapter extends BaseAdapter implements ListAdapter,
 
     public void makeSectionInvisibleIfFirstInList(final int firstVisibleItem) {
        
-        for (final Entry<Integer, String> entry : sectionPositions.entrySet()) {
-            if (entry.getKey() > firstVisibleItem ) {
+        for (int i=0 ;i<sectionPositions.size(); i++) {
+            if (sectionPositions.keyAt(i) > firstVisibleItem ) {
                 break;
             }
-            setSectionText(entry.getValue(), headerView);
+            setSectionText(sectionPositions.get(sectionPositions.keyAt(i)), headerView);
         }
     }
 
-    protected void sectionClicked(final String section) {
-        // do nothing
-    }
+    
+    protected void sectionClicked(final String section) {}
 
     @Override
     public void onItemClick(final AdapterView< ? > parent, final View view,
